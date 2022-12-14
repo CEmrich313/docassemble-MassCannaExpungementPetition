@@ -1,0 +1,331 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+  - docassemble.ALMassachusetts:al_massachusetts.yml
+---
+metadata:
+  title: |
+    Massachusetts Cannabis Expungement
+  short title: |
+    Cannabis Expungement
+  tags:
+    - HE-00-00-00-00
+    - Other
+  authors:
+    - Christopher Emrich
+---
+mandatory: True
+comment: |
+  Global interview metadata
+variable name: interview_metadata["Mass_Canna_Expungement_Petition"]
+data:
+  al_weaver_version: "1.7.0"
+  generated on: "2022-12-01"
+  title: >-
+    Massachusetts Cannabis Expungement
+  short title: >-
+    Cannabis Expungement
+  description: |-
+    Hello! On November 4th 2022, Massachusetts passed a law allowing for expungement of Misdemeanor and felony cannabis charges. This is a free tool to help you understand the qualifications and eventually help you fill out a form to send to the court.
+  original_form: >-
+    
+  allowed courts: 
+    - "Boston Municipal Court"
+    - "District Court"
+    - "Juvenile Court"
+    - "Superior Court"
+  categories:
+    - "HE-00-00-00-00"
+    - "Criminal"
+    - "Expungement"
+  typical role: "plaintiff"
+  generate download screen: True
+---
+code: |
+  interview_metadata['main_interview_key'] =  'Mass_Canna_Expungement_Petition'
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-MassCannaExpungementPetition'
+---
+code: |
+  interview_short_title = "File a Expungement petition for Cannabis Offenses"
+---
+code: |
+  al_form_type = "existing_case" 
+---
+objects:
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+---
+sections:
+  - review_Mass_Canna_Expungement_Petition: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_Mass_Canna_Expungement_Petition
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = interview_metadata["Mass_Canna_Expungement_Petition"]["allowed courts"]
+  nav.set_section("review_Mass_Canna_Expungement_Petition")
+  user_role = "plaintiff"
+  user_ask_role = "plaintiff"
+  Massachusetts_Cannabis_Expungement_Qualification_Questionnaire_and_Form
+  YOUR_NAME_ADDRESS_AND_PHONE_NUMBER_Petitioner
+  COURT_DIVISION
+  set_progress(25)
+  D_I_request_the_assistance_of_an_interpreter_for_the_following_language
+  DOCKET_NO_of_the_case_in_which_you_are_seeking_expungement
+  D_I_make_this_request_because_the_criminal_records_noted_above_were_created_as_a_result_of_marijuana_offenses_that_have_now_been_decriminalized_based_on_the_amount_of_marijuana_involved_Check_box_and_refer_to_Instructions_on_the_next_page_Specifically_provide_as_much_detail_as_possible_explaining_the_reasons_for_your_request
+  set_progress(50)
+  DA1tc
+  interview_order_Mass_Canna_Expungement_Petition = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  Mass_Canna_Expungement_Petition_intro
+  interview_order_Mass_Canna_Expungement_Petition
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  Mass_Canna_Expungement_Petition_download
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: Massachusetts_Cannabis_Expungement
+continue button field: Mass_Canna_Expungement_Petition_intro
+question: |
+  Massachusetts Cannabis Expungement
+subquestion: |
+  Whether you have been convicted or not, a record might exist that could come up in background checks or other criminal history searches.  Expunging your record will permanently destroy the file a court holds.  
+  
+  The first part of this application will take you through a questionnaire to determine if you are eligible to expunge your misdemeanor or felony cannabis charge.  The second part will help you fill out the form to send to the court. 
+  
+  Not all records are able to be expunged. Some violent offenses or various other types will disqualify you for expungement.  Multiple charges from one offense are considered one offense.  
+  
+  This is not legal advice. If you have multiple charges from one incident, it is considered one charge. Misdemeanors and Felonys are able to be expunged but the time requirement is 7 years.
+---
+id: Massachusetts Cannabis Expungement Qualification Questionnaire and Form
+question: |
+  Massachusetts Cannabis Expungement Qualification Questionnaire and Form
+subquestion: |
+  A Legal Innovation Technology
+  Created by: DeAnna Wendland & Christopher Emrich 
+continue button field: Massachusetts_Cannabis_Expungement_Qualification_Questionnaire_and_Form
+--- 
+id: Personal Information
+question: |
+  Personal Information
+subquestion: |
+  Enter your personal information in this format: Name; Address; Phone number
+fields:
+  - "Your name address and phone number petitioner": YOUR_NAME_ADDRESS_AND_PHONE_NUMBER_Petitioner
+    input type: area
+    maxlength: 205
+  - "Today_Date": DATE
+    datatype: date
+---
+id: Which Court Were You Charged At
+question: |
+  Which Court Were You Charged At?
+subquestion: |
+  Type the name of the court division (ie, Suffolk, Dorchester; etc.)
+fields:
+  - "Court division": COURT_DIVISION
+    input type: area
+    maxlength: 106
+---
+id: Do You Need an interpreter
+question: |
+  Do You Need an interpreter?
+subquestion: |
+  SKIP THIS STEP IF YOUR PREFERRED LANGUAGE IS ENGLISH.
+  
+  Write the language you want the court to correspond with you in.
+fields:
+  - "Assist_Interpret": D_I_request_the_assistance_of_an_interpreter_for_the_following_language
+    maxlength: 39
+---
+id: Cannabis Charge Docket Number
+question: |
+  Cannabis Charge Docket Number
+subquestion: |
+  Type the Docket Number of the record you want to expunge the cannabis charge from.
+  
+  How many cannabis charges do you want to expunge from this record? (ie, 1,2,3)
+fields:
+  - "Docket number of the case in which you are seeking expungement": DOCKET_NO_of_the_case_in_which_you_are_seeking_expungement
+    maxlength: 46
+  - "Counts": Counts
+    datatype: number
+---
+id: Description of the Cannabis Charge
+question: |
+  Description of the Cannabis Charge
+subquestion: |
+  Describe how expunging this record will improve your life.
+fields:
+  - "Detail_Of_Record_Specific": D_I_make_this_request_because_the_criminal_records_noted_above_were_created_as_a_result_of_marijuana_offenses_that_have_now_been_decriminalized_based_on_the_amount_of_marijuana_involved_Check_box_and_refer_to_Instructions_on_the_next_page_Specifically_provide_as_much_detail_as_possible_explaining_the_reasons_for_your_request
+    input type: area
+    maxlength: 1045
+---
+id: Date Completed Form is Given to Prosecution
+question: |
+  Date Completed Form is Given to Prosecution
+subquestion: |
+  Type the date on which you send this form to the prosecutions office.
+fields:
+  - "Date_Provided_To_Prosecution": DA1tc
+    datatype: date
+---
+id: preview Mass_Canna_Expungement_Petition
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_court_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_Mass_Canna_Expungement_Petition'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: Mass_Canna_Expungement_Petition_preview_question    
+---
+code: |
+  signature_fields = []
+---
+code: |
+  Massachusetts_Trial_Court = DAEmpty()
+---
+code: |
+  PETITIONERS_SIGNATURE = DAEmpty()
+---
+code: |
+  # This is a placeholder for the addresses that will be searched
+  # for matching address to court. Edit if court venue is based on 
+  # a different address than the user's
+  [user.address.address for user in users.complete_elements()]
+  addresses_to_search = [user.address for user in users.complete_elements()]
+---
+id: Mass Canna Expungement Petition review screen
+event: review_Mass_Canna_Expungement_Petition
+question: |
+  Review your answers
+review:
+  - Edit: DOCKET_NO_of_the_case_in_which_you_are_seeking_expungement
+    button: |
+      **Docket number of the case in which you are seeking expungement**:
+      ${ DOCKET_NO_of_the_case_in_which_you_are_seeking_expungement }
+  - Edit: Massachusetts_Trial_Court
+    button: |
+      **Massachusetts trial court**:
+      ${ Massachusetts_Trial_Court }
+  - Edit: YOUR_NAME_ADDRESS_AND_PHONE_NUMBER_Petitioner
+    button: |
+      **Your name address and phone number petitioner**:
+      > ${ single_paragraph(YOUR_NAME_ADDRESS_AND_PHONE_NUMBER_Petitioner) }
+  - Edit: COURT_DIVISION
+    button: |
+      **Court division**:
+      > ${ single_paragraph(COURT_DIVISION) }
+  - Edit: D_I_request_the_assistance_of_an_interpreter_for_the_following_language
+    button: |
+      **Assist_Interpret**:
+      ${ D_I_request_the_assistance_of_an_interpreter_for_the_following_language }
+  - Edit: Counts
+    button: |
+      **Counts**:
+      ${ Counts }
+  - Edit: D_I_make_this_request_because_the_criminal_records_noted_above_were_created_as_a_result_of_marijuana_offenses_that_have_now_been_decriminalized_based_on_the_amount_of_marijuana_involved_Check_box_and_refer_to_Instructions_on_the_next_page_Specifically_provide_as_much_detail_as_possible_explaining_the_reasons_for_your_request
+    button: |
+      **Detail_Of_Record_Specific**:
+      > ${ single_paragraph(D_I_make_this_request_because_the_criminal_records_noted_above_were_created_as_a_result_of_marijuana_offenses_that_have_now_been_decriminalized_based_on_the_amount_of_marijuana_involved_Check_box_and_refer_to_Instructions_on_the_next_page_Specifically_provide_as_much_detail_as_possible_explaining_the_reasons_for_your_request) }
+  - Edit: DA1tc
+    button: |
+      **Date_Provided_To_Prosecution**:
+      ${ DA1tc }
+  - Edit: DATE
+    button: |
+      **Today_Date**:
+      ${ DATE }
+  - Edit: PETITIONERS_SIGNATURE
+    button: |
+      **Petitioners signature**:
+      ${ PETITIONERS_SIGNATURE }
+---
+id: download Mass_Canna_Expungement_Petition
+event: Mass_Canna_Expungement_Petition_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+
+  ${ action_button_html(url_action('review_Mass_Canna_Expungement_Petition'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=False) }
+
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  - Mass_Canna_Expungement_Petition_Post_interview_instructions: ALDocument.using(title="Instructions", filename="Mass_Canna_Expungement_Petition_next_steps.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  - Mass_Canna_Expungement_Petition_attachment: ALDocument.using(title="Massachusetts Cannabis Expungement", filename="Mass_Canna_Expungement_Petition", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[Mass_Canna_Expungement_Petition_Post_interview_instructions, Mass_Canna_Expungement_Petition_attachment], filename="Mass_Canna_Expungement_Petition", title="All forms to download for your records", enabled=True)
+  - al_court_bundle: ALDocumentBundle.using(elements=[Mass_Canna_Expungement_Petition_attachment],  filename="Mass_Canna_Expungement_Petition", title="All forms to deliver to court", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachments:
+  - name: Post-interview-Instructions
+    filename: Mass_Canna_Expungement_Petition_next_steps
+    docx template file: Mass_Canna_Expungement_Petition_next_steps.docx
+    variable name: Mass_Canna_Expungement_Petition_Post_interview_instructions[i]
+  - name: Mass Canna Expungement Petition
+    filename: Mass_Canna_Expungement_Petition
+    variable name: Mass_Canna_Expungement_Petition_attachment[i]
+    skip undefined: True
+    pdf template file: Mass_Canna_Expungement_Petition.pdf
+    fields:
+      - "DOCKET NO of the case in which you are seeking expungement": ${ DOCKET_NO_of_the_case_in_which_you_are_seeking_expungement }
+      - "Massachusetts Trial Court": ${ Massachusetts_Trial_Court }
+      - "YOUR NAME ADDRESS AND PHONE NUMBER Petitioner": ${ YOUR_NAME_ADDRESS_AND_PHONE_NUMBER_Petitioner }
+      - "COURT DIVISION": ${ COURT_DIVISION }
+      - "D I request the assistance of an interpreter for the following language": ${ D_I_request_the_assistance_of_an_interpreter_for_the_following_language }
+      - "Counts": ${ "{:,.2f}".format(Counts) }
+      - "D I make this request because the criminal records noted above were created as a result of marijuana offenses that have now been decriminalized based on the amount of marijuana involved Check box and refer to Instructions on the next page Specifically provide as much detail as possible explaining the reasons for your request": ${ D_I_make_this_request_because_the_criminal_records_noted_above_were_created_as_a_result_of_marijuana_offenses_that_have_now_been_decriminalized_based_on_the_amount_of_marijuana_involved_Check_box_and_refer_to_Instructions_on_the_next_page_Specifically_provide_as_much_detail_as_possible_explaining_the_reasons_for_your_request }
+      - "DA1tc": ${ DA1tc.format() }
+      - "DATE": ${ DATE.format() }
+      - "PETITIONERS SIGNATURE": ${ PETITIONERS_SIGNATURE }
+
+
